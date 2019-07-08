@@ -47,5 +47,7 @@ public interface GenericService<T extends AbstractMongoEntity> {
   PageDto<T> toPageDto(Page<T> page);
 
   Long countAllLike(T entity);
+  
+  List<String> distinctColumnValues(String collection, String column); 
 
 }

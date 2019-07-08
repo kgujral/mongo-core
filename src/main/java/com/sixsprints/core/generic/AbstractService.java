@@ -5,6 +5,7 @@ import static org.springframework.data.mongodb.core.FindAndModifyOptions.options
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +20,8 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
 
+import com.mongodb.client.DistinctIterable;
+import com.mongodb.client.MongoCursor;
 import com.sixsprints.core.domain.AbstractMongoEntity;
 import com.sixsprints.core.domain.CustomSequences;
 import com.sixsprints.core.dto.PageDto;
@@ -194,6 +197,17 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
       throw notFoundException("slug", slug);
     }
     return entity;
+  }
+
+  @Override
+  public List<String> distinctColumnValues(String collection, String column) {
+    DistinctIterable<String> iterable = mongoTemplate.getCollection(collection).distinct(column, String.class);
+    MongoCursor<String> cursor = iterable.iterator();
+    List<String> list = new ArrayList<>();
+    while (cursor.hasNext()) {
+      list.add(cursor.next());
+    }
+    return list;
   }
 
 }
