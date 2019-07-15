@@ -15,13 +15,20 @@ public class NotAuthenticatedException extends BaseException {
     this(DEFAULT_HTTP_STATUS, DEFAULT_MESSAGE);
   }
 
-  public NotAuthenticatedException(HttpStatus httpStatus, String message) {
-    super(httpStatus, DEFAULT_HTTP_STATUS, message, DEFAULT_MESSAGE);
-
-  }
-
   public NotAuthenticatedException(String message) {
     this(DEFAULT_HTTP_STATUS, message);
+  }
+
+  public NotAuthenticatedException(String message, String[] args) {
+    this(DEFAULT_HTTP_STATUS, message, args);
+  }
+
+  public NotAuthenticatedException(HttpStatus httpStatus, String message) {
+    this(httpStatus, message, null);
+  }
+
+  public NotAuthenticatedException(HttpStatus httpStatus, String message, String[] args) {
+    super(httpStatus, DEFAULT_HTTP_STATUS, message, DEFAULT_MESSAGE, args);
   }
 
 }

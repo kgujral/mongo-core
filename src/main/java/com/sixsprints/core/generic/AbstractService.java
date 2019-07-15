@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
@@ -201,7 +202,11 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
 
   @Override
   public List<String> distinctColumnValues(String collection, String column) {
-    DistinctIterable<String> iterable = mongoTemplate.getCollection(collection).distinct(column, String.class);
+
+    Query query = new Query();
+
+    DistinctIterable<String> iterable = mongoTemplate.getCollection(collection).distinct(column, query.getQueryObject(),
+        String.class);
     MongoCursor<String> cursor = iterable.iterator();
     List<String> list = new ArrayList<>();
     while (cursor.hasNext()) {

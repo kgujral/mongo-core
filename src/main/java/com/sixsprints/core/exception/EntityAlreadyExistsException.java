@@ -15,12 +15,20 @@ public class EntityAlreadyExistsException extends BaseException {
     this(DEFAULT_HTTP_STATUS, DEFAULT_MESSAGE);
   }
 
-  public EntityAlreadyExistsException(HttpStatus httpStatus, String message) {
-    super(httpStatus, DEFAULT_HTTP_STATUS, message, DEFAULT_MESSAGE);
-  }
-
   public EntityAlreadyExistsException(String message) {
     this(DEFAULT_HTTP_STATUS, message);
+  }
+
+  public EntityAlreadyExistsException(String message, String[] args) {
+    this(DEFAULT_HTTP_STATUS, message, args);
+  }
+
+  public EntityAlreadyExistsException(HttpStatus httpStatus, String message) {
+    this(httpStatus, message, null);
+  }
+
+  public EntityAlreadyExistsException(HttpStatus httpStatus, String message, String[] args) {
+    super(httpStatus, DEFAULT_HTTP_STATUS, message, DEFAULT_MESSAGE, args);
   }
 
 }

@@ -15,13 +15,20 @@ public class NotAuthorizedException extends BaseException {
     this(DEFAULT_HTTP_STATUS, DEFAULT_MESSAGE);
   }
 
-  public NotAuthorizedException(HttpStatus httpStatus, String message) {
-    super(httpStatus, DEFAULT_HTTP_STATUS, message, DEFAULT_MESSAGE);
-
-  }
-
   public NotAuthorizedException(String message) {
     this(DEFAULT_HTTP_STATUS, message);
+  }
+
+  public NotAuthorizedException(String message, String[] args) {
+    this(DEFAULT_HTTP_STATUS, message, args);
+  }
+
+  public NotAuthorizedException(HttpStatus httpStatus, String message) {
+    this(httpStatus, message, null);
+  }
+
+  public NotAuthorizedException(HttpStatus httpStatus, String message, String[] args) {
+    super(httpStatus, DEFAULT_HTTP_STATUS, message, DEFAULT_MESSAGE, args);
   }
 
 }

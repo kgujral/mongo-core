@@ -12,15 +12,19 @@ public class EntityNotFoundException extends BaseException {
   private static final HttpStatus DEFAULT_HTTP_STATUS = HttpStatus.NOT_FOUND;
 
   public EntityNotFoundException() {
-    this(DEFAULT_HTTP_STATUS, DEFAULT_MESSAGE);
+    this(DEFAULT_HTTP_STATUS, DEFAULT_MESSAGE, null);
   }
 
-  public EntityNotFoundException(HttpStatus httpStatus, String message) {
-    super(httpStatus, DEFAULT_HTTP_STATUS, message, DEFAULT_MESSAGE);
+  public EntityNotFoundException(HttpStatus httpStatus, String message, String[] args) {
+    super(httpStatus, DEFAULT_HTTP_STATUS, message, DEFAULT_MESSAGE, args);
   }
 
   public EntityNotFoundException(String message) {
-    this(DEFAULT_HTTP_STATUS, message);
+    this(DEFAULT_HTTP_STATUS, message, null);
+  }
+
+  public EntityNotFoundException(String message, String[] args) {
+    this(DEFAULT_HTTP_STATUS, message, args);
   }
 
 }
