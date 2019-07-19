@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
@@ -108,6 +109,28 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
   public void delete(String id) throws EntityNotFoundException {
     T entity = findOne(id);
     delete(entity);
+  }
+
+  @Override
+  public void softDelete(T entity) {
+    entity.setActive(Boolean.FALSE);
+    save(entity);
+    log.debug("Soft Deleted: " + entity);
+  }
+
+  protected abstract Class<T> classType();
+
+  @Override
+  public void softDelete(List<String> ids) {
+    Query query = new Query(new Criteria("id").in(ids));
+    Update update = new Update().set("active", Boolean.FALSE);
+    mongo.updateMulti(query, update, classType());
+  }
+
+  @Override
+  public void softDelete(String id) throws EntityNotFoundException {
+    T entity = findOne(id);
+    softDelete(entity);
   }
 
   @Override

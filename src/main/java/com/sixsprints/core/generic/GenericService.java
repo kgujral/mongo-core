@@ -38,6 +38,12 @@ public interface GenericService<T extends AbstractMongoEntity> {
 
   void delete(List<T> entities);
 
+  void softDelete(String id) throws EntityNotFoundException;
+
+  void softDelete(T entity);
+
+  void softDelete(List<String> ids);
+
   T update(String id, T domain) throws EntityNotFoundException;
 
   Page<T> findAllLike(T example, Pageable page);
