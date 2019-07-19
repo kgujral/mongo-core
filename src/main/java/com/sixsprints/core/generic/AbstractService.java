@@ -99,6 +99,12 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
   }
 
   @Override
+  public void delete(List<T> entities) {
+    repository().deleteAll(entities);
+    log.debug("Deleted: " + entities);
+  }
+
+  @Override
   public void delete(String id) throws EntityNotFoundException {
     T entity = findOne(id);
     delete(entity);

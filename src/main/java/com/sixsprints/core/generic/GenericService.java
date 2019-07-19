@@ -36,6 +36,8 @@ public interface GenericService<T extends AbstractMongoEntity> {
 
   void delete(T entity);
 
+  void delete(List<T> entities);
+
   T update(String id, T domain) throws EntityNotFoundException;
 
   Page<T> findAllLike(T example, Pageable page);
@@ -47,7 +49,7 @@ public interface GenericService<T extends AbstractMongoEntity> {
   PageDto<T> toPageDto(Page<T> page);
 
   Long countAllLike(T entity);
-  
-  List<String> distinctColumnValues(String collection, String column); 
+
+  List<String> distinctColumnValues(String collection, String column);
 
 }
