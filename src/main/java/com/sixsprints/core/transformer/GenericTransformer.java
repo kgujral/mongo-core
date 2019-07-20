@@ -37,6 +37,16 @@ public abstract class GenericTransformer<ENTITY, DTO> {
     return pageDto;
   }
 
+  public PageDto<ENTITY> pageEntityToPageDtoEntity(Page<ENTITY> page) {
+    PageDto<ENTITY> pageDto = new PageDto<>();
+    pageDto.setCurrentPageSize(page.getNumberOfElements());
+    pageDto.setCurrentPage(page.getNumber());
+    pageDto.setTotalElements(page.getTotalElements());
+    pageDto.setTotalPages(page.getTotalPages());
+    pageDto.setContent(page.getContent());
+    return pageDto;
+  }
+
   private PageDto<DTO> pageAnyToPageDtoDto(Page<?> page) {
     PageDto<DTO> pageDto = new PageDto<>();
     pageDto.setCurrentPageSize(page.getNumberOfElements());
