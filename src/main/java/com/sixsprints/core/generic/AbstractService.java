@@ -7,6 +7,7 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import org.springframework.util.StringUtils;
 
 import com.mongodb.client.DistinctIterable;
 import com.mongodb.client.MongoCursor;
+import com.mongodb.client.result.UpdateResult;
 import com.sixsprints.core.domain.AbstractMongoEntity;
 import com.sixsprints.core.domain.CustomSequences;
 import com.sixsprints.core.dto.PageDto;
@@ -242,6 +244,30 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
       list.add(cursor.next());
     }
     return list;
+  }
+
+  @Override
+  public Boolean patchById(String id, Map<String, Object> values) {
+    Query query = new Query(new Criteria("id").is(id));
+    return makePatchRequest(id, values, query);
+  }
+
+  private Boolean makePatchRequest(String identifier, Map<String, Object> values, Query query) {
+    if (values == null || values.isEmpty() || StringUtils.isEmpty(identifier)) {
+      return false;
+    }
+    Update update = new Update();
+    for (String key : values.keySet()) {
+      update.set(key, values.get(key));
+    }
+    UpdateResult updateFirst = mongo.updateFirst(query, update, classType());
+    return updateFirst.wasAcknowledged();
+  }
+
+  @Override
+  public Boolean patchBySlug(String slug, Map<String, Object> values) {
+    Query query = new Query(new Criteria("slug").is(slug));
+    return makePatchRequest(slug, values, query);
   }
 
 }

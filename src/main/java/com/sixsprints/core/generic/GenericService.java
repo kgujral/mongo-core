@@ -2,6 +2,7 @@
 package com.sixsprints.core.generic;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -57,5 +58,9 @@ public interface GenericService<T extends AbstractMongoEntity> {
   Long countAllLike(T entity);
 
   List<String> distinctColumnValues(String collection, String column);
+
+  Boolean patchById(String id, Map<String, Object> values);
+
+  Boolean patchBySlug(String slug, Map<String, Object> values);
 
 }
