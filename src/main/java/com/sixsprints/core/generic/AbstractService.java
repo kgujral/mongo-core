@@ -343,7 +343,12 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
       return null;
     }
     domain = saveOrOverwrite(domain);
+    postSave(domain);
     return domain;
+  }
+
+  protected void postSave(T domain) {
+
   }
 
   protected boolean isInvalid(T domain) {
@@ -358,6 +363,7 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
       BeanWrapperUtil.copyNonNullProperties(domain, fromDB);
       return save(fromDB);
     }
+    transformProperties(domain);
     return save(domain);
   }
 
@@ -373,7 +379,9 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
       delete(fromDB);
     }
     transformProperties(domain);
-    return save(domain);
+    domain = save(domain);
+    postSave(domain);
+    return domain;
   }
 
   protected void transformProperties(T domain) {
