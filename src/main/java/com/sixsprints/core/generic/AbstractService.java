@@ -170,7 +170,9 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
       }
       delete(fromDB);
     }
-    return save(oldData);
+    oldData = save(oldData);
+    postSave(oldData);
+    return oldData;
   }
 
   protected T checkDuplicate(T oldData) {
