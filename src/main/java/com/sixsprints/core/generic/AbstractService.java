@@ -39,6 +39,7 @@ import com.sixsprints.core.domain.CustomSequences;
 import com.sixsprints.core.dto.PageDto;
 import com.sixsprints.core.exception.BaseException;
 import com.sixsprints.core.exception.EntityAlreadyExistsException;
+import com.sixsprints.core.exception.EntityInvalidException;
 import com.sixsprints.core.exception.EntityNotFoundException;
 import com.sixsprints.core.utils.BeanWrapperUtil;
 
@@ -360,12 +361,27 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
     return save(domain);
   }
 
-  public T create(T domain) throws EntityAlreadyExistsException {
+  public T create(T domain) throws EntityAlreadyExistsException, EntityInvalidException {
+    if (isInvalid(domain)) {
+      throw invalidException(domain);
+    }
     T fromDB = checkDuplicate(domain);
     if (fromDB != null) {
-      throw alreadyExistsException(fromDB);
+      if (fromDB.getActive()) {
+        throw alreadyExistsException(fromDB);
+      }
+      delete(fromDB);
     }
+    transformProperties(domain);
     return save(domain);
+  }
+
+  protected void transformProperties(T domain) {
+
+  }
+
+  protected EntityInvalidException invalidException(T domain) {
+    return new EntityInvalidException();
   }
 
 }

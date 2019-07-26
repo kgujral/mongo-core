@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import com.sixsprints.core.domain.AbstractMongoEntity;
 import com.sixsprints.core.dto.PageDto;
 import com.sixsprints.core.exception.EntityAlreadyExistsException;
+import com.sixsprints.core.exception.EntityInvalidException;
 import com.sixsprints.core.exception.EntityNotFoundException;
 
 public interface GenericService<T extends AbstractMongoEntity> {
@@ -70,6 +71,6 @@ public interface GenericService<T extends AbstractMongoEntity> {
 
   List<T> bulkImport(List<T> list);
 
-  T create(T domain) throws EntityAlreadyExistsException;
+  T create(T domain) throws EntityAlreadyExistsException, EntityInvalidException;
 
 }
