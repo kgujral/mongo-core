@@ -68,4 +68,8 @@ public interface GenericService<T extends AbstractMongoEntity> {
 
   Boolean patch(T oldData, T newData);
 
+  List<T> bulkImport(List<T> list);
+
+  T create(T domain) throws EntityAlreadyExistsException;
+
 }

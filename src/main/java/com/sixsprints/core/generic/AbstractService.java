@@ -26,9 +26,11 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.mongodb.client.DistinctIterable;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.result.UpdateResult;
@@ -318,6 +320,50 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
       map.put(change.getPropertyName(), change.getRight());
     }
     return patchById(newData.getId(), map);
+  }
+
+  @Override
+  public List<T> bulkImport(List<T> list) {
+    List<T> saved = Lists.newArrayList();
+    if (CollectionUtils.isEmpty(list)) {
+      return saved;
+    }
+    for (T domain : list) {
+      T save = saveOneWhileBulkImport(domain);
+      if (save != null) {
+        saved.add(save);
+      }
+    }
+    return saved;
+  }
+
+  private T saveOneWhileBulkImport(T domain) {
+    if (isInvalid(domain)) {
+      return null;
+    }
+    domain = saveOrOverwrite(domain);
+    return domain;
+  }
+
+  protected abstract boolean isInvalid(T domain);
+
+  private T saveOrOverwrite(T domain) {
+    T fromDB = checkDuplicate(domain);
+    if (fromDB != null) {
+      domain.copyEntityFrom(fromDB);
+      domain.setActive(Boolean.TRUE);
+      BeanWrapperUtil.copyNonNullProperties(domain, fromDB);
+      return save(fromDB);
+    }
+    return save(domain);
+  }
+
+  public T create(T domain) throws EntityAlreadyExistsException {
+    T fromDB = checkDuplicate(domain);
+    if (fromDB != null) {
+      throw alreadyExistsException(fromDB);
+    }
+    return save(domain);
   }
 
 }
