@@ -25,6 +25,17 @@ public abstract class GenericTransformer<ENTITY, DTO> {
     return dtos;
   }
 
+  public List<ENTITY> toDomain(List<DTO> dtos) {
+    List<ENTITY> entities = new ArrayList<>();
+    for (DTO dto : dtos) {
+      ENTITY entity = toDomain(dto);
+      if (entity != null) {
+        dtos.add(dto);
+      }
+    }
+    return entities;
+  }
+
   public PageDto<DTO> pageEntityToPageDtoDto(Page<ENTITY> page) {
     PageDto<DTO> pageDto = pageAnyToPageDtoDto(page);
     pageDto.setContent(toDto(page.getContent()));
