@@ -337,7 +337,7 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
     return saved;
   }
 
-  private T saveOneWhileBulkImport(T domain) {
+  protected T saveOneWhileBulkImport(T domain) {
     if (isInvalid(domain)) {
       return null;
     }
