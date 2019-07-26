@@ -5,10 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 
 import org.javers.core.Javers;
+import org.javers.core.JaversBuilder;
 import org.javers.core.diff.Diff;
 import org.javers.core.diff.changetype.ValueChange;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,8 +17,7 @@ import lombok.NoArgsConstructor;
 
 public class DiffTest extends ApplicationTests {
 
-  @Autowired
-  private Javers javers;
+  private Javers javers = JaversBuilder.javers().build();
 
   @Test
   public void testDiff() {

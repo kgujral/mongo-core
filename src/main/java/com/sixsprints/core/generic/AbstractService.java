@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.javers.core.Javers;
+import org.javers.core.JaversBuilder;
 import org.javers.core.diff.Diff;
 import org.javers.core.diff.changetype.ValueChange;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,8 +48,7 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
   @Autowired
   protected MongoTemplate mongoTemplate;
 
-  @Autowired
-  protected Javers javers;
+  protected Javers javers = JaversBuilder.javers().build();
 
   protected int getNextSequence(String seqName) {
     CustomSequences counter = mongo.findAndModify(query(where("_id").is(seqName)), new Update().inc("seq", 1),
