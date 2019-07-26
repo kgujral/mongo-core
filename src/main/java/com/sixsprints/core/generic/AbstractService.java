@@ -6,10 +6,14 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.javers.core.Javers;
+import org.javers.core.diff.Diff;
+import org.javers.core.diff.changetype.ValueChange;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -42,6 +46,9 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
 
   @Autowired
   protected MongoTemplate mongoTemplate;
+
+  @Autowired
+  protected Javers javers;
 
   protected int getNextSequence(String seqName) {
     CustomSequences counter = mongo.findAndModify(query(where("_id").is(seqName)), new Update().inc("seq", 1),
@@ -268,6 +275,18 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
   public Boolean patchBySlug(String slug, Map<String, Object> values) {
     Query query = new Query(new Criteria("slug").is(slug));
     return makePatchRequest(slug, values, query);
+  }
+
+  @Override
+  public Boolean patch(T oldData, T newData) {
+    Map<String, Object> map = new HashMap<String, Object>();
+    newData.copyEntityFrom(oldData);
+    Diff diff = javers.compare(oldData, newData);
+    List<ValueChange> changes = diff.getChangesByType(ValueChange.class);
+    for (ValueChange change : changes) {
+      map.put(change.getPropertyName(), change.getRight());
+    }
+    return patchById(newData.getId(), map);
   }
 
 }

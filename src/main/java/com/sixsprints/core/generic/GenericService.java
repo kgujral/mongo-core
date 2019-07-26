@@ -63,4 +63,6 @@ public interface GenericService<T extends AbstractMongoEntity> {
 
   Boolean patchBySlug(String slug, Map<String, Object> values);
 
+  Boolean patch(T oldData, T newData);
+
 }
