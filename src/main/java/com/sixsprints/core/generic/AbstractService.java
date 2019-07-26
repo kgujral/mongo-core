@@ -28,6 +28,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
 
+import com.google.common.collect.ImmutableList;
 import com.mongodb.client.DistinctIterable;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.result.UpdateResult;
@@ -35,7 +36,9 @@ import com.sixsprints.core.domain.AbstractMongoEntity;
 import com.sixsprints.core.domain.CustomSequences;
 import com.sixsprints.core.dto.PageDto;
 import com.sixsprints.core.exception.BaseException;
+import com.sixsprints.core.exception.EntityAlreadyExistsException;
 import com.sixsprints.core.exception.EntityNotFoundException;
+import com.sixsprints.core.utils.BeanWrapperUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -148,6 +151,29 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
     T fromDb = findOne(id);
     domain.copyEntityFrom(fromDb);
     return save(domain);
+  }
+
+  @Override
+  public T patchUpdate(String id, T domain, String propChanged)
+      throws EntityNotFoundException, EntityAlreadyExistsException {
+    log.debug("Updating id: " + id + " with " + domain);
+    T oldData = findOne(domain.getId());
+    BeanWrapperUtil.copyProperties(domain, oldData, ImmutableList.<String>of(propChanged));
+    T fromDB = checkDuplicate(oldData);
+    
+    if (fromDB != null && !oldData.getId().equals(fromDB.getId())) {
+      if (fromDB.getActive()) {
+        throw alreadyExistsException(fromDB);
+      }
+      delete(fromDB);
+    }
+    return save(oldData);
+  }
+
+  protected abstract T checkDuplicate(T oldData);
+
+  protected EntityAlreadyExistsException alreadyExistsException(T fromDB) {
+    return new EntityAlreadyExistsException();
   }
 
   @Override

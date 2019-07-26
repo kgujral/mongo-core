@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.sixsprints.core.domain.AbstractMongoEntity;
 import com.sixsprints.core.dto.PageDto;
+import com.sixsprints.core.exception.EntityAlreadyExistsException;
 import com.sixsprints.core.exception.EntityNotFoundException;
 
 public interface GenericService<T extends AbstractMongoEntity> {
@@ -46,6 +47,8 @@ public interface GenericService<T extends AbstractMongoEntity> {
   void softDelete(List<String> ids);
 
   T update(String id, T domain) throws EntityNotFoundException;
+
+  T patchUpdate(String id, T domain, String propChanged) throws EntityNotFoundException, EntityAlreadyExistsException;
 
   Page<T> findAllLike(T example, Pageable page);
 
