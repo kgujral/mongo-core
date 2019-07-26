@@ -160,7 +160,7 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
     T oldData = findOne(domain.getId());
     BeanWrapperUtil.copyProperties(domain, oldData, ImmutableList.<String>of(propChanged));
     T fromDB = checkDuplicate(oldData);
-    
+
     if (fromDB != null && !oldData.getId().equals(fromDB.getId())) {
       if (fromDB.getActive()) {
         throw alreadyExistsException(fromDB);
@@ -170,7 +170,12 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
     return save(oldData);
   }
 
-  protected abstract T checkDuplicate(T oldData);
+  protected T checkDuplicate(T oldData) {
+    if (StringUtils.isEmpty(oldData.getSlug())) {
+      return repository().findById(oldData.getId()).orElse(null);
+    }
+    return repository().findBySlug(oldData.getSlug());
+  }
 
   protected EntityAlreadyExistsException alreadyExistsException(T fromDB) {
     return new EntityAlreadyExistsException();
