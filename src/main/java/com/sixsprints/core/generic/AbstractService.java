@@ -365,7 +365,6 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
     T fromDB = checkDuplicate(domain);
     if (fromDB != null) {
       domain.copyEntityFrom(fromDB);
-      domain.setActive(Boolean.TRUE);
       BeanWrapperUtil.copyNonNullProperties(domain, fromDB);
       return save(fromDB);
     }
