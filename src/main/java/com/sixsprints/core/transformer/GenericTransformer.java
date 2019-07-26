@@ -30,7 +30,7 @@ public abstract class GenericTransformer<ENTITY, DTO> {
     for (DTO dto : dtos) {
       ENTITY entity = toDomain(dto);
       if (entity != null) {
-        dtos.add(dto);
+        entities.add(entity);
       }
     }
     return entities;
