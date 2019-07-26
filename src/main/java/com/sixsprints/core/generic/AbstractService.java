@@ -345,7 +345,9 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
     return domain;
   }
 
-  protected abstract boolean isInvalid(T domain);
+  protected boolean isInvalid(T domain) {
+    return false;
+  }
 
   private T saveOrOverwrite(T domain) {
     T fromDB = checkDuplicate(domain);
