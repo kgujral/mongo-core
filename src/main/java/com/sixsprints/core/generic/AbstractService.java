@@ -160,7 +160,7 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
   public T patchUpdate(String id, T domain, String propChanged)
       throws EntityNotFoundException, EntityAlreadyExistsException {
     log.debug("Updating id: " + id + " with " + domain);
-    T oldData = findOne(domain.getId());
+    T oldData = findOne(id);
     BeanWrapperUtil.copyProperties(domain, oldData, ImmutableList.<String>of(propChanged));
     T fromDB = checkDuplicate(oldData);
 
