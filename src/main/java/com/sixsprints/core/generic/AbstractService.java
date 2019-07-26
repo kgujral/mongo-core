@@ -171,7 +171,9 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
       delete(fromDB);
     }
     oldData = save(oldData);
-    postSave(oldData);
+    if (oldData.getActive()) {
+      postSave(oldData);
+    }
     return oldData;
   }
 
@@ -345,7 +347,9 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
       return null;
     }
     domain = saveOrOverwrite(domain);
-    postSave(domain);
+    if (domain.getActive()) {
+      postSave(domain);
+    }
     return domain;
   }
 
@@ -382,7 +386,9 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
     }
     transformProperties(domain);
     domain = save(domain);
-    postSave(domain);
+    if (domain.getActive()) {
+      postSave(domain);
+    }
     return domain;
   }
 
