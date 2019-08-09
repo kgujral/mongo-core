@@ -374,6 +374,11 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
       Boolean active = domain.getActive();
       domain.copyEntityFrom(fromDB);
       domain.setActive(active);
+
+      if (checkEquals(fromDB, domain)) {
+        return null;
+      }
+
       copyNonNullValues(domain, fromDB);
       ChangeDto change = ChangeDto.builder().action(AuditLogAction.UPDATE)
         .source(AuditLogSource.BULK_IMPORT).build();
@@ -394,6 +399,13 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
       postSave(domain, change);
     }
     return domain;
+  }
+
+  protected boolean checkEquals(T obj1, T obj2) {
+    if (obj1 == null && obj2 == null) {
+      return true;
+    }
+    return obj1 != null && obj2 != null && obj1.equals(obj2);
   }
 
   protected void copyNonNullValues(T source, T target) {

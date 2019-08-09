@@ -1,5 +1,6 @@
 package com.sixsprints.core.utils;
 
+import java.beans.PropertyDescriptor;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,16 +31,44 @@ public class BeanWrapperUtil {
 
   private static String[] getNullPropertyNames(Object source) {
     final BeanWrapper src = new BeanWrapperImpl(source);
-    java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();
+    PropertyDescriptor[] pds = src.getPropertyDescriptors();
 
     Set<String> emptyNames = new HashSet<String>();
-    for (java.beans.PropertyDescriptor pd : pds) {
+    for (PropertyDescriptor pd : pds) {
       Object srcValue = src.getPropertyValue(pd.getName());
       if (srcValue == null || srcValue.toString().isEmpty())
         emptyNames.add(pd.getName());
     }
     String[] result = new String[emptyNames.size()];
     return emptyNames.toArray(result);
+  }
+
+  public static boolean checkAllPropsEqual(Object obj1, Object obj2) {
+    if (obj1 == obj2) {
+      return true;
+    }
+    if (!obj1.getClass().equals(obj2.getClass())) {
+      return false;
+    }
+
+    final BeanWrapper obj1Wrap = new BeanWrapperImpl(obj1);
+    final BeanWrapper obj2Wrap = new BeanWrapperImpl(obj2);
+
+    PropertyDescriptor[] pds = obj1Wrap.getPropertyDescriptors();
+
+    for (PropertyDescriptor pd : pds) {
+      Object obj1Val = obj1Wrap.getPropertyValue(pd.getName());
+      Object obj2Val = obj2Wrap.getPropertyValue(pd.getName());
+
+      if (obj1Val == null && obj2Val == null) {
+        continue;
+      }
+
+      if (obj1Val == null || obj2Val == null || !obj1Val.equals(obj2Val)) {
+        return false;
+      }
+    }
+    return true;
   }
 
 }
