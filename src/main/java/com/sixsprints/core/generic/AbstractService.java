@@ -376,7 +376,10 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
       domain.setActive(active);
 
       if (checkEquals(fromDB, domain)) {
-        return null;
+        if (skipIfEqual()) {
+          return null;
+        }
+        return fromDB;
       }
 
       copyNonNullValues(domain, fromDB);
@@ -399,6 +402,10 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
       postSave(domain, change);
     }
     return domain;
+  }
+
+  protected boolean skipIfEqual() {
+    return true;
   }
 
   protected boolean checkEquals(T obj1, T obj2) {
