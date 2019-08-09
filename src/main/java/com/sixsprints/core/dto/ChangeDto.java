@@ -22,4 +22,5 @@ public class ChangeDto {
 
   private Object newValue;
 
+  private String propChanged;
 }

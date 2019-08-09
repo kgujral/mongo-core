@@ -168,7 +168,7 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
     ChangeDto change = ChangeDto.builder().action(AuditLogAction.UPDATE)
       .oldValue(BeanWrapperUtil.getValue(oldData, propChanged))
       .newValue(BeanWrapperUtil.getValue(domain, propChanged))
-      .source(AuditLogSource.SCREEN)
+      .source(AuditLogSource.SCREEN).propChanged(propChanged)
       .build();
 
     BeanWrapperUtil.copyProperties(domain, oldData, ImmutableList.<String>of(propChanged));
