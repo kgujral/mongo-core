@@ -361,7 +361,7 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
   }
 
   protected void postSave(T domain, ChangeDto change) {
-
+    saveAuditLog(change);
   }
 
   protected boolean isInvalid(T domain) {
@@ -422,6 +422,10 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
   }
 
   protected void transformProperties(T domain) {
+
+  }
+
+  protected void saveAuditLog(ChangeDto dto) {
 
   }
 
