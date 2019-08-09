@@ -45,6 +45,8 @@ public class AbstractMongoEntity {
     this.dateCreated = source.dateCreated;
     this.dateModified = source.dateModified;
     this.slug = source.slug;
+    this.createdBy = source.createdBy;
+    this.lastModifiedBy = source.lastModifiedBy;
   }
 
 }
