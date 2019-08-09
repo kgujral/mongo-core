@@ -63,7 +63,7 @@ public class BaseException extends Exception {
   }
 
   public BaseException(HttpStatus httpStatus, HttpStatus defaultStatus, String message, String defaultMessage,
-      String[] args) {
+    String[] args) {
     super();
     this.httpStatus = httpStatus == null ? defaultStatus : httpStatus;
     this.message = StringUtils.isEmpty(message) ? defaultMessage : message;

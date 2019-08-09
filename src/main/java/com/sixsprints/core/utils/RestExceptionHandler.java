@@ -36,14 +36,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler(value = { IllegalArgumentException.class })
   protected ResponseEntity<RestResponse<?>> handleIllegalArgumentException(IllegalArgumentException ex,
-      WebRequest request) {
+    WebRequest request) {
     log.error(ex.getMessage());
     return RestUtil.errorResponse(ex.getMessage(), HttpStatus.NOT_ACCEPTABLE);
   }
 
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers,
-      HttpStatus status, WebRequest request) {
+    HttpStatus status, WebRequest request) {
     String violation = convertConstraintViolation(ex);
     log.error(violation);
     return new ResponseEntity<Object>(new RestResponse<>(Boolean.FALSE, violation, null), HttpStatus.BAD_REQUEST);

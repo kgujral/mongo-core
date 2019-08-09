@@ -24,7 +24,7 @@ public class PageDto<T> implements Serializable {
   }
 
   public PageDto(Integer currentPage, Integer currentPageSize, Integer totalPages, Long totalElements,
-      List<T> content) {
+    List<T> content) {
     super();
     this.currentPage = currentPage;
     this.currentPageSize = currentPageSize;
@@ -76,7 +76,7 @@ public class PageDto<T> implements Serializable {
   @Override
   public String toString() {
     return "PageDto [currentPage=" + currentPage + ", currentPageSize=" + currentPageSize + ", totalPages=" + totalPages
-        + ", totalElements=" + totalElements + ", content=" + content + "]";
+      + ", totalElements=" + totalElements + ", content=" + content + "]";
   }
 
 }

@@ -23,10 +23,10 @@ public class DiffTest extends ApplicationTests {
   public void testDiff() {
 
     User user1 = User.builder().x(10).y(20).name("Karan")
-        .address(User.Address.builder().city("Delhi").country("India").build()).build();
+      .address(User.Address.builder().city("Delhi").country("India").build()).build();
 
     User user2 = User.builder().x(10).name("karan")
-        .address(User.Address.builder().city("Delhi").country("India").build()).build();
+      .address(User.Address.builder().city("Delhi").country("India").build()).build();
 
     Diff diff = javers.compare(user1, user2);
 
