@@ -406,7 +406,9 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
     return domain;
   }
 
-  protected abstract T clone(T domain);
+  protected T clone(T domain) {
+    return null;
+  }
 
   protected boolean skipIfEqual() {
     return true;
