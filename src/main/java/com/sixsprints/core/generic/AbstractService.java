@@ -375,14 +375,16 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
       domain.copyEntityFrom(fromDB);
       domain.setActive(active);
 
-      if (checkEquals(fromDB, domain)) {
+      T copy = clone(fromDB);
+      copyNonNullValues(domain, fromDB);
+
+      if (checkEquals(fromDB, copy)) {
         if (skipIfEqual()) {
           return null;
         }
         return fromDB;
       }
 
-      copyNonNullValues(domain, fromDB);
       ChangeDto change = ChangeDto.builder().action(AuditLogAction.UPDATE)
         .source(AuditLogSource.BULK_IMPORT).build();
 
@@ -403,6 +405,8 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
     }
     return domain;
   }
+
+  protected abstract T clone(T domain);
 
   protected boolean skipIfEqual() {
     return true;
