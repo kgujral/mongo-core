@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
 
 @Document
 @Data
-@EqualsAndHashCode(of = { "id" })
+@EqualsAndHashCode
 public class AbstractMongoEntity {
 
   @Id
