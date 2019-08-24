@@ -17,4 +17,6 @@ public interface GenericRepository<T extends AbstractMongoEntity> extends MongoR
 
   T findBySlug(String slug);
 
+  List<T> findSlugByIdIn(List<String> ids);
+
 }

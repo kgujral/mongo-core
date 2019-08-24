@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.javers.core.Javers;
 import org.javers.core.JaversBuilder;
@@ -143,6 +144,18 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
     Query query = new Query(new Criteria("id").in(ids));
     Update update = new Update().set("active", Boolean.FALSE);
     mongo.updateMulti(query, update, classType());
+    List<String> slugs = findSlugByIds(ids);
+    for (String slug : slugs) {
+      saveAuditLog(slug,
+        ChangeDto.builder().action(AuditLogAction.UPDATE).propChanged("active").source(AuditLogSource.SCREEN)
+          .oldValue(true).newValue(false)
+          .build());
+    }
+  }
+
+  @Override
+  public List<String> findSlugByIds(List<String> ids) {
+    return repository().findSlugByIdIn(ids).stream().map(c -> c.getSlug()).collect(Collectors.toList());
   }
 
   @Override
@@ -451,6 +464,10 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
   }
 
   protected void saveAuditLog(T domain, ChangeDto dto) {
+
+  }
+
+  protected void saveAuditLog(String id, ChangeDto dto) {
 
   }
 

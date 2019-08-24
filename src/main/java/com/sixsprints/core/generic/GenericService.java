@@ -73,4 +73,6 @@ public interface GenericService<T extends AbstractMongoEntity> {
 
   T create(T domain) throws EntityAlreadyExistsException, EntityInvalidException;
 
+  List<String> findSlugByIds(List<String> ids);
+
 }
