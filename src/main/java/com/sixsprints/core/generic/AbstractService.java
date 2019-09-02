@@ -178,9 +178,11 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
     log.debug("Updating id: " + id + " with " + domain);
     T oldData = findOne(id);
 
+    Object oldValue = BeanWrapperUtil.getValue(oldData, propChanged);
+    Object newValue = BeanWrapperUtil.getValue(domain, propChanged);
     ChangeDto change = ChangeDto.builder().action(AuditLogAction.UPDATE)
-      .oldValue(BeanWrapperUtil.getValue(oldData, propChanged))
-      .newValue(BeanWrapperUtil.getValue(domain, propChanged))
+      .oldValue(oldValue == null ? null : oldValue.toString())
+      .newValue(newValue == null ? null : newValue.toString())
       .source(AuditLogSource.SCREEN).propChanged(propChanged)
       .build();
 

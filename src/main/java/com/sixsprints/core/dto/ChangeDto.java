@@ -18,9 +18,9 @@ public class ChangeDto {
 
   private AuditLogSource source;
 
-  private Object oldValue;
+  private String oldValue;
 
-  private Object newValue;
+  private String newValue;
 
   private String propChanged;
 
