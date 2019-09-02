@@ -148,7 +148,7 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
     for (String slug : slugs) {
       saveAuditLog(slug,
         ChangeDto.builder().action(AuditLogAction.DELETE).propChanged("active").source(AuditLogSource.SCREEN)
-          .oldValue(true).newValue(false)
+          .oldValue("true").newValue("false")
           .build());
     }
   }
