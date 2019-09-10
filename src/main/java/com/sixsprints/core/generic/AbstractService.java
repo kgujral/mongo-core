@@ -148,7 +148,6 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
     for (String slug : slugs) {
       saveAuditLog(slug,
         ChangeDto.builder().action(AuditLogAction.DELETE).propChanged("active").source(AuditLogSource.SCREEN)
-          .oldValue("true").newValue("false")
           .build());
     }
   }
@@ -386,28 +385,32 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
   private T saveOrOverwrite(T domain) {
     T fromDB = checkDuplicate(domain);
     if (fromDB != null) {
-      Boolean active = domain.getActive();
-      domain.copyEntityFrom(fromDB);
-      domain.setActive(active);
+      if (!fromDB.getActive()) {
+        delete(fromDB);
+      } else {
+        Boolean active = domain.getActive();
+        domain.copyEntityFrom(fromDB);
+        domain.setActive(active);
 
-      T copy = clone(fromDB);
-      copyNonNullValues(domain, fromDB);
+        T copy = clone(fromDB);
+        copyNonNullValues(domain, fromDB);
 
-      if (checkEquals(fromDB, copy)) {
-        if (skipIfEqual()) {
-          return null;
+        if (checkEquals(fromDB, copy)) {
+          if (skipIfEqual()) {
+            return null;
+          }
+          return fromDB;
+        }
+
+        ChangeDto change = ChangeDto.builder().action(AuditLogAction.UPDATE)
+          .source(AuditLogSource.BULK_IMPORT).build();
+
+        fromDB = save(fromDB);
+        if (fromDB.getActive()) {
+          postSave(fromDB, change);
         }
         return fromDB;
       }
-
-      ChangeDto change = ChangeDto.builder().action(AuditLogAction.UPDATE)
-        .source(AuditLogSource.BULK_IMPORT).build();
-
-      fromDB = save(fromDB);
-      if (fromDB.getActive()) {
-        postSave(fromDB, change);
-      }
-      return fromDB;
     }
     transformProperties(domain);
 
