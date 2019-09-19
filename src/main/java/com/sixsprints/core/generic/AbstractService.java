@@ -6,6 +6,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,7 @@ import com.sixsprints.core.exception.EntityAlreadyExistsException;
 import com.sixsprints.core.exception.EntityInvalidException;
 import com.sixsprints.core.exception.EntityNotFoundException;
 import com.sixsprints.core.utils.BeanWrapperUtil;
+import com.sixsprints.core.utils.DateUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -180,8 +182,8 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
     Object oldValue = BeanWrapperUtil.getValue(oldData, propChanged);
     Object newValue = BeanWrapperUtil.getValue(domain, propChanged);
     ChangeDto change = ChangeDto.builder().action(AuditLogAction.UPDATE)
-      .oldValue(oldValue == null ? null : oldValue.toString())
-      .newValue(newValue == null ? null : newValue.toString())
+      .oldValue(convert(oldValue))
+      .newValue(convert(newValue))
       .source(AuditLogSource.SCREEN).propChanged(propChanged)
       .build();
 
@@ -199,6 +201,17 @@ public abstract class AbstractService<T extends AbstractMongoEntity> implements 
       postSave(oldData, change);
     }
     return oldData;
+  }
+
+  private String convert(Object value) {
+    if (value == null) {
+      return null;
+    }
+    if (value instanceof Date) {
+      Date date = (Date) value;
+      return DateUtil.dateToString(date);
+    }
+    return value.toString();
   }
 
   protected T checkDuplicate(T oldData) {
