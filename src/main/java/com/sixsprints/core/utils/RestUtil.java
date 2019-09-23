@@ -13,6 +13,10 @@ public final class RestUtil {
     return successResponse(data, HttpStatus.OK);
   }
 
+  public static <T> ResponseEntity<RestResponse<T>> successResponse(T data, String message) {
+    return new ResponseEntity<RestResponse<T>>(new RestResponse<>(true, message, data), HttpStatus.OK);
+  }
+
   public static <T> ResponseEntity<RestResponse<?>> errorResponse(String errorMessage, HttpStatus statusCode) {
     return new ResponseEntity<RestResponse<?>>(new RestResponse<T>(Boolean.FALSE, errorMessage, null), statusCode);
   }
